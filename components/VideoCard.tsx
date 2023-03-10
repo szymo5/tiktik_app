@@ -80,7 +80,7 @@ const VideoCard: NextPage<IProps> = ({ post }) => { // is the same post: IProps
 
                         </video>
                     </Link>
-                    {1 && (
+                    {isHover && (
                         <div className='absolute bottom-6 cursor-pointer left-8 md:left-14 lg:left-0 flex gap-10 lg:justify-between w-[100px] md:w-[50px] p-3'>
                             {
                                 playing ? (
