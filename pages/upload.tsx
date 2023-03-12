@@ -3,21 +3,39 @@ import { useRouter } from 'next/router'
 import { FaCloudUploadAlt } from 'react-icons/fa'
 import {MdDelete} from 'react-icons/md';
 import axios from 'axios';
+import { SanityAssetDocument } from '@sanity/client';
 
 import useAuthStore from '@/store/authStore';
 import { client } from '@/utils/client';
 
 const Upload = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const [videoAsset, setVideoAsset] = useState();
+    const [videoAsset, setVideoAsset] = useState<SanityAssetDocument | undefined>();
+    const [wrongFileType, setWrongFileType] = useState(false);
 
     const uploadVideo = async (e: any) => {
         const selectedFile = e.target.files[0];
+        const fileTypes = ['video/mp4', 'video/web,', 'video/ogg'];
+
+        if(fileTypes.includes(selectedFile.type)) {
+            client.assets.upload('file', selectedFile, {
+                contentType: selectedFile.type,
+                filename: selectedFile.name
+            })
+            .then((data) => {
+                setVideoAsset(data);
+                setIsLoading(false);
+            })
+
+        } else {
+            setIsLoading(false);
+            setWrongFileType(true);
+        }
     }
 
     return (
-        <div className="flex w-full h-full">
-            <div className="bg-white rounded-lg">
+        <div className="flex w-full h-full absolute left-0 top-[60px] mb-10 pt-10 lg:pt-20 bg-[#F8F8F8] justify-center">
+            <div className="bg-white rounded-lg xl:h-[80vh] flex gap-6 flex-wrap justify-center items-center p-14 pt-6">
                 <div>
                     <div>
                         <p className="text-2xl font-bold">Upload Video</p>
@@ -29,7 +47,16 @@ const Upload = () => {
                         ) : (
                             <div>
                                 {videoAsset ? (
-                                    <div></div>
+                                    <div className=''>
+                                        <video 
+                                            src={videoAsset.url}
+                                            loop
+                                            controls
+                                            className='rounded-xl h-[450px] mt-16 bg-black'
+                                        >
+
+                                        </video>
+                                    </div>
                                 ) : (
                                     <label className="cursor-pointer">
                                         <div className="flex flex-col items-center justify-center h-full">
@@ -61,7 +88,15 @@ const Upload = () => {
                                 )}
                             </div>
                         )}
+                        {wrongFileType && (
+                            <p className='text-center text-xl text-red-400 font-semibold mt-4 w-[250px]'>
+                                Please select a video file
+                            </p>
+                        )}
                     </div>
+                </div>
+                <div className='flex flex-col gap-3 pb-10'>
+                    <label className='text-md font-medium'>Caption</label>
                 </div>
             </div>
         </div>
