@@ -45,11 +45,13 @@ const Detail = ({ postDetails }: IProps) => {
 
   const handleLike = async (like: boolean) => {
     if(userProfile){
-      const response = await axios.put(`${BASE_URL}/api/like`, {
+      const {data} = await axios.put(`${BASE_URL}/api/like`, {
         userId: userProfile._id,
         postId: post._id,
         like
       })
+
+      setPost({...post, likes: data.likes})
     }
   }
 
@@ -76,7 +78,7 @@ const Detail = ({ postDetails }: IProps) => {
           </div>
           <div className='absolute top-[45%] left-[45%] cursor-pointer'>
             {!playing && (
-              <button onClick={() => { onVideoClick }}>
+              <button onClick={onVideoClick}>
                 <BsFillPlayFill className='text-white text-6xl lg:text-8xl' />
               </button>
             )}
