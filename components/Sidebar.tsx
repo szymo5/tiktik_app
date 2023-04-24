@@ -8,6 +8,7 @@ import {ImCancelCircle} from 'react-icons/im';
 
 import Discover from './Discover';
 import Footer from './Footer';
+import SuggestedAccounts from './SuggestedAccounts';
 
 const Sidebar = () => {
   const [showSidebar, setShowSidebar] = useState(true);
@@ -39,11 +40,10 @@ const Sidebar = () => {
               </Link>
             </div>
           <Discover />
+          <SuggestedAccounts />
           <Footer />
         </div>
       )}
-      {/* <SuggestedAccounts />
-      <Footer /> */}
     </div>
   )
 }
